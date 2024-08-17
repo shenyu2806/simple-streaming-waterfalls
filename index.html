@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title></title>
+		<style type="text/css">
+			body{
+				background: #F0EFEE;
+			}
+			#waterfall {
+				column-count: 5;
+				/* 列数 */
+				column-gap: 10px;
+				/* 列间距 */
+				list-style: none;
+				/* 去除列表样式 */
+				margin: 0;
+				padding: 0;
+			}
+			#waterfall li {
+				display: inline-block;
+				/* 列表项内联显示 */
+				width: 100%;
+				/* 列表项宽度占满列 */
+				margin-bottom: 15px;
+				/* 列表项底部间距 */
+			}
+			#waterfall img {
+				width: 100%;
+				/* 图片宽度占满列表项 */
+				height: auto;
+				/* 根据宽度自动计算高度 */
+				box-shadow: 3px 3px 5px #00000017;
+			}
+			img:hover {
+			    opacity: 0.5;  /* 当鼠标悬停时，设置图片透明度为0.5 */
+			    transition: opacity 0.5s ease;  /* 透明度变化的过渡效果 */
+			}
+		</style>
+	</head>
+	<body>
+		<ul id="waterfall">
+			<!-- 这里是图片容器 -->
+		</ul>
+	</body>
+	<script>
+		// 获取页面上的容器元素
+		var container = document.getElementById('waterfall');
+		// 获取body元素
+		var body = document.getElementsByTagName('body')[0];
+		
+		//请求数据接口
+		var xhr = new XMLHttpRequest();
+		
+		// 设置超时时间（毫秒）
+		xhr.timeout = 5000;
+		 
+		// 设置超时后的错误处理函数
+		xhr.ontimeout = function() {
+		    console.error('请求超时！');
+		};
+		 
+		// 设置错误处理函数
+		xhr.onerror = function() {
+			body.innerHTML += '<div style="color:red;">请求发生错误! 请检查后台服务是否正常</div>'; // 在容器中添加新的HTML代码
+		    console.error('请求发生错误！');
+		};
+		 
+		// 设置请求完成后的处理函数
+		xhr.onload = function() {
+		    if (this.status === 200) {
+		        // 请求成功
+				var data = JSON.parse(xhr.responseText);
+				// 对返回的数据进行处理
+				var i = 0;
+				// 使用forEach循环遍历图片数组
+				data.forEach(function(src) {
+					//删除./public/前缀
+					let ToRemove = "./public/";
+					let dates = data[i].replace(ToRemove,"");
+					let srcc = "http://localhost:3000/"+dates
+					i++;
+					// 创建一个新的li元素
+					var li = document.createElement("li");
+					// 创建一个新的a元素
+					var a = document.createElement('a');
+				    // 创建一个新的img元素
+				    var img = document.createElement('img');
+				    // 设置img元素的属性
+				    img.src = srcc;
+					a.href = srcc;
+					// 将a添加到li中
+					a.appendChild(img);
+					li.appendChild(a);
+				    // 将img元素添加到容器中
+				    container.appendChild(li);
+				});
+		    } else {
+		        // 请求失败
+				body.innerHTML += '<div style="color:red;">请求失败:'+this.status+ '!  请检查后台服务是否正常</div>'; // 在容器中添加新的HTML代码
+		        console.error('请求失败，状态码：' + this.status);
+		    }
+		};
+		
+		//获取地址栏
+		const urlParams = new URLSearchParams(window.location.search);
+		const iop = urlParams.get('ops');
+		console.log(iop);
+		var ops = 0;
+		if(iop != null){
+			ops = iop
+		}
+		 var fename = "薇拉";
+		// 初始化请求
+		if(ops == 1){
+			fename = "小铃久绘";
+		}else if(ops == 2){
+			fename = "薇拉";
+		}
+		var url = "http://localhost:3000/img?url="+fename+"/";//小铃久绘|薇拉
+		xhr.open('GET', url, true);
+		// if()
+		xhr.send();
+	</script>
+</html>
