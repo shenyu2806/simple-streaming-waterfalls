@@ -1,7 +1,10 @@
-# node.js + express + html
+# 简单的瀑布图片案例
 
 #### 介绍
-简单的瀑布图片案例
+node.js + express + html
+
+![](https://gitee.com/fs529/bote_images_url/raw/master/simple-streaming-waterfalls/a1.png)
+![](https://gitee.com/fs529/bote_images_url/raw/master/simple-streaming-waterfalls/a2.png)
 
 #### 运行环境
 ```bash
